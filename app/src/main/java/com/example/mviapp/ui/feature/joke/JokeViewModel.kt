@@ -28,6 +28,16 @@ class JokeViewModel @Inject constructor(private val useCase: ApiUseCase): ViewMo
         }
     }
 
+    fun handleIntent(intent: JokeIntent) {
+        viewModelScope.launch {
+            when(intent) {
+                is JokeIntent.getJoke -> {
+                    getJoke()
+                }
+            }
+        }
+    }
+
     private suspend fun getJoke() {
         val joke = useCase.getRandomJoke()
         viewModelScope.launch {
