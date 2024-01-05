@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "219242448622",
+    "project_id": "mvi-app-afa1f",
+    "storage_bucket": "mvi-app-afa1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219242448622:android:99b48a2b373d7e906215ff",
+        "android_client_info": {
+          "package_name": "com.example.mviapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARRh-gCV75Zmqb1bvEmEkjS4AJMDTlgkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

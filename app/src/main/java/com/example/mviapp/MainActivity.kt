@@ -25,8 +25,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.mviapp.sealedclass.TabItem
+import com.example.mviapp.ui.feature.auth.LoginScreen
+import com.example.mviapp.ui.feature.auth.SignUpScreen
 import com.example.mviapp.ui.feature.joke.JokeIntent
 import com.example.mviapp.ui.feature.joke.JokeViewModel
 import com.example.mviapp.ui.theme.MVIAppTheme
@@ -37,6 +43,24 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
+sealed class DestinationScreen(var route: String) {
+    object MainScreen: DestinationScreen("mainScreen")
+    object SignUp: DestinationScreen("signup")
+    object Login: DestinationScreen("login")
+    object Profile: DestinationScreen("profile")
+    object ChatList: DestinationScreen("chatList")
+    object SingleChat: DestinationScreen("singleChat/{chatId}") {
+        fun createRoute(id: String) = "singleChat/$id"
+    }
+
+    object StatusList: DestinationScreen("statusList")
+    object SingleStatus: DestinationScreen("statusList/{userId}") {
+        fun createRoute(userId: String) = "singleChat/$userId"
+    }
+
+}
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -49,9 +73,24 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    mainScreen()
+                    appNavigation()
                 }
             }
+        }
+    }
+}
+@Composable
+fun appNavigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = DestinationScreen.SignUp.route) {
+        composable(DestinationScreen.MainScreen.route) {
+            mainScreen()
+        }
+        composable(DestinationScreen.SignUp.route) {
+            SignUpScreen(navController = navController)
+        }
+        composable(DestinationScreen.Login.route) {
+            LoginScreen(navController = navController)
         }
     }
 }
@@ -108,7 +147,7 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
-    val viewModel: JokeViewModel = viewModel()
+    val viewModel = hiltViewModel<JokeViewModel>()
     HorizontalPager(state = pagerState, count = tabs.size) { page ->
         if (tabs[page] == TabItem.InfoNotLinked) {
             viewModel.handleIntent(JokeIntent.getJoke)
